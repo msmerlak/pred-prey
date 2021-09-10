@@ -9,6 +9,10 @@ mutable struct SheepWolf <: Agents.AbstractAgent
     metabolism::Float64
 end
 
+# Simple helper functions
+Sheep(id, pos, energy, metabolism) = SheepWolf(id, pos, :sheep, energy, metabolism)
+Wolf(id, pos, energy, metabolism) = SheepWolf(id, pos, :wolf, energy, metabolism)
+
 sheep(a) = a.type == :sheep
 wolves(a) = a.type == :wolf
 count_grass(model) = sum(model.grass)
@@ -37,23 +41,34 @@ function initialize_model(;
         grass_growth_rate = grass_growth_rate,
         predation_efficiency = predation_efficiency,
         reproduction_threshold = reproduction_threshold
+        # rng = rng
     )
     model = Agents.ABM(SheepWolf, space; properties, scheduler = Agents.Schedulers.randomly)
     id = 0
     for _ = 1:n_sheep
         id += 1
-        Agents.add_agent!(SheepWolf(id, (0, 0), :sheep, initial_energy_sheep, initial_metabolism_sheep), model)
+        Agents.add_agent!(Sheep(id, (0, 0), initial_energy_sheep, initial_metabolism_sheep), model)
     end
     for _ = 1:n_wolves
         id += 1
-        Agents.add_agent!(SheepWolf(id, (0, 0), :wolf, initial_energy_wolf, initial_metabolism_wolf), model)
+        Agents.add_agent!(Wolf(id, (0, 0), initial_energy_wolf, initial_metabolism_wolf), model)
     end
     return model
 end
 
+using Memoize
+@memoize function collect_sheep_here_memo(position, model)
+    agents_here = collect(Agents.agents_in_position(position, model))
+    sheep_here = filter!(x -> x.type == :sheep, agents_here)
+    return sheep_here
+end
+
+
 function collect_sheep_here(position, model)
     return filter!(x -> x.type == :sheep, collect(Agents.agents_in_position(position, model)))
 end
+
+
 
 function sheepwolf_step!(agent::SheepWolf, model)
 
@@ -77,6 +92,7 @@ function sheepwolf_step!(agent::SheepWolf, model)
         return
     end
 end
+
 
 function sheep_eat!(sheep, sheep_here, model)
     if model.grass[sheep.pos...] > 0
@@ -113,3 +129,26 @@ function grass_step!(model)
         model.grass[p...] += model.grass_growth_rate
     end
 end
+
+
+model = initialize_model(
+    n_sheep = 100,
+    n_wolves = 100,
+    dims = (50, 50),
+    initial_grass = 1.,
+    grass_growth_rate = 20,
+    initial_energy_sheep = 50,
+    initial_energy_wolf = 50,
+    initial_metabolism_sheep = 5,
+    initial_metabolism_wolf = 1,
+    mutation_rate = 0.1,
+    predation_efficiency = 10,
+    reproduction_threshold = 30
+);
+
+n = 100
+
+adata = [(sheep, count), (wolves, count), (:metabolism, Statistics.mean, sheep), (:metabolism, Statistics.mean, wolves)];
+mdata = [count_grass];
+
+@time adf, mdf = Agents.run!(model, sheepwolf_step!, grass_step!, n; adata = adata , mdata = mdata);

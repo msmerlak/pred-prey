@@ -7,7 +7,7 @@ from numpy import arange
 sim = run(
     grid_size=50,
     FC=False,
-    nb_steps=5000,
+    nb_steps=1000,
     counts_dict={
         'hare': 100,
         'wolf': 100,
