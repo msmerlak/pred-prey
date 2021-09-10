@@ -25,3 +25,8 @@ mdata = [count_grass];
 
 plot_population_timeseries(adf, mdf)
 plot_metabolism_timeseries(adf, mdf)
+
+using ProfileView
+n = 100
+
+@profview adf, mdf = Agents.run!(model, sheepwolf_step!, grass_step!, n; adata = adata , mdata = mdata)

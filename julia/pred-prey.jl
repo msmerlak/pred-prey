@@ -1,9 +1,5 @@
-
-import Agents, Random, Distributions, Statistics
-import InteractiveDynamics
-import CairoMakie
-
-using Profile, ProfileView
+import Random, Distributions, Statistics
+import Agents, InteractiveDynamics
 
 mutable struct SheepWolf <: Agents.AbstractAgent
     id::Int
@@ -37,11 +33,6 @@ function initialize_model(;
     reproduction_threshold = 50,
     seed = nothing,
 )
-    # if seed != nothing
-    #     rng = Random.MersenneTwister(seed)
-    # else
-    #     rng = Random.MersenneTwister()
-    # end
 
     space = Agents.GridSpace(dims, periodic = true)
     properties = (
@@ -132,10 +123,6 @@ function grass_step!(model)
     end
 end
 
-# The following plot shows the population dynamics over time.
-# Initially, wolves become extinct because they consume the sheep too quickly.
-# The few remaining sheep reproduce and gradually reach an
-# equilibrium that can be supported by the amount of available grass.
 function plot_population_timeseries(adf, mdf)
     figure = InteractiveDynamics.Figure(resolution = (600, 400))
     ax = figure[1, 1] = InteractiveDynamics.Axis(figure; xlabel = "Step", ylabel = "Population")
