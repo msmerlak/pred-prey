@@ -9,19 +9,8 @@ import numpy as np
 from tqdm import tqdm
 from collections import defaultdict
 
-# Parameters and functions ---
-
-############------------------------------------#
-# SETTINGS #------------------------------------#
-############------------------------------------#
-
-SAVE = False
-PLOT = True
-
-# number of levels
-LEVELS = 2 # !!! IMPORTANT !!! IT CAN ONLY BE 2 OR 3
-
-# Classes and functions definitions ---
+import os
+os.getcwd()
 
 class Agent:
 
@@ -40,16 +29,17 @@ class Cell:
 
 class Grid:
 
-    def __init__(self, size, FC, nb_steps):
+    def __init__(self, size, FC, nb_steps, levels):
         self.size = size
         self.FC = FC
-        self.levels = LEVELS
+        self.levels = levels
         self.population = {'hare' : [], 'wolf' : [], 'human' : []}
 
         self.density = {'hare' : [], 'wolf' : [], 'human' : []}
         self.energy = {'hare' : [], 'wolf' : [], 'human' : []}
         self.metabolism = {'hare' : [], 'wolf' : [], 'human' : []}
         self.lifetime = {'hare' : defaultdict(int), 'wolf' : defaultdict(int), 'human' : defaultdict(int)}
+        self.autopsy = {'hare' : {'starved' : 0, 'killed' : 0}, 'wolf' : {'starved' : 0, 'killed' : 0}, 'human' : {'starved' : 0, 'killed' : 0}}
         self.grass = []
         # 2D grid
         self.grid = [[Cell() for i in range(self.size)] for j in range(self.size)]
@@ -73,6 +63,7 @@ class Grid:
                 self.lifetime[species][agent.age] += 1
                 self.population[species].remove(agent)
                 self.grid[agent.i][agent.j].local_population[species].remove(agent)
+                self.autopsy[species]['starved'] += 1
 
     def grass_grows(self, grass_growth_rate):
         for i in range(self.size):
@@ -112,7 +103,6 @@ class Grid:
                 self.grid[i][j].local_population[species].append(offspring)
                 self.population[species].append(offspring)
                 parent.energy = parent.energy/2
-                #print('reproduction', parent.species)
 
     def hares_graze(self):
         for hare in self.population['hare']:
@@ -130,8 +120,9 @@ class Grid:
             if len(hares_here) > 0:
                 tmp_hare = choice(hares_here)
                 if np.random.random() < wolf.metabolism/tmp_hare.metabolism:
-                    wolf.energy += predation_efficiency # tmp_hare.energy
+                    wolf.energy += predation_efficiency
                     self.lifetime['hare'][tmp_hare.age] += 1
+                    self.autopsy['hare']['killed'] += 1
                     self.grid[i][j].local_population['hare'].remove(tmp_hare)
                     self.population['hare'].remove(tmp_hare)
             wolf.energy -= 1 + wolf.metabolism
@@ -143,8 +134,9 @@ class Grid:
             if len(wolves_here) > 0:
                 tmp_wolf = choice(wolves_here)
                 if np.random.random() < human.metabolism/tmp_wolf.metabolism:
-                    human.energy += predation_efficiency #tmp_wolf.energy #10
+                    human.energy += predation_efficiency
                     self.lifetime['wolf'][tmp_wolf.age] += 1
+                    self.autopsy['wolf']['killed'] += 1
                     self.grid[i][j].local_population['wolf'].remove(tmp_wolf)
                     self.population['wolf'].remove(tmp_wolf)
 
@@ -190,7 +182,7 @@ class Grid:
             self.time_avg[species] = np.mean(self.density[species][round(total_duration/2):])
         return self.time_avg
 
-    def plot(self):
+    def plot(self, levels):
             plt.figure(figsize=(20,20))
             plt.subplot(511)
             plt.plot(self.density['hare'])
@@ -221,7 +213,7 @@ class Grid:
             x_lifetime, y_lifetime = zip(*sorted(normalized_dictionary(dict(self.lifetime['wolf'])).items()))
             plt.xscale('log')
             plt.plot(x_lifetime, y_lifetime)
-            if LEVELS == 3:
+            if levels == 3:
                 x_lifetime, y_lifetime = zip(*sorted(normalized_dictionary(dict(self.lifetime['human'])).items()))
                 plt.plot(x_lifetime, y_lifetime)
             plt.ylabel('frequency')
@@ -236,10 +228,10 @@ def mutate(parent_metabolism, mutation_rate):
     else:
         return 0.0002*1
 
-def run(grid_size, FC, nb_steps, counts_dict, energy_dict, metabolism_dict, reproduction_threshold, grass_growth_rate, immigration, mutation_rate, predation_efficiency):
+def run(grid_size, FC, nb_steps, levels, counts_dict, energy_dict, metabolism_dict, reproduction_threshold, grass_growth_rate, immigration, mutation_rate, predation_efficiency):
 
     # create grid
-    sim_grid = Grid(grid_size, FC, nb_steps)
+    sim_grid = Grid(grid_size, FC, nb_steps, levels)
 
     # put the guys
     sim_grid.place_agents(counts_dict, energy_dict, metabolism_dict)
