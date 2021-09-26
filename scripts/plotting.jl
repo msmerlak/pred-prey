@@ -1,4 +1,4 @@
-using Plots
+using Plots, CairoMakie
 
 function plot_population_timeseries(adf, mdf)
     figure = InteractiveDynamics.Figure(resolution = (600, 400))

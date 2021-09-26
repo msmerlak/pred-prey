@@ -65,7 +65,6 @@ function sheepwolf_step!(agent::SheepWolf, model)
 
     sheep_here = collect_sheep_here(agent.pos, model)
 
-
     if agent.type == :sheep
         sheep_eat!(agent, sheep_here, model)
     else
@@ -97,7 +96,6 @@ function wolf_eat!(wolf, sheep_here, model)
         end
     end
 end
-
 
 function reproduce!(agent, model)
     agent.energy /= 2
