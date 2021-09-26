@@ -2,7 +2,7 @@ using DrWatson
 @quickactivate
 
 include("../src/pred-prey.jl");
-include("../src/plotting.jl");
+include("../scripts/plotting.jl");
 
 model = initialize_model(
     n_sheep = 100,
@@ -25,7 +25,7 @@ adata = [(sheep, count), (wolves, count), (:metabolism, Statistics.mean, sheep),
 mdata = [count_grass];
 
 
-adf, mdf = Agents.run!(model, sheepwolf_step!, grass_step!, n; adata = adata , mdata = mdata)
+@time adf, mdf = Agents.run!(model, sheepwolf_step!, grass_step!, n; adata = adata , mdata = mdata)
 
 
-@time adf, mdf = Agents.run!(model, sheepwolf_step!, grass_step!, 1; adata = adata , mdata = mdata)
+plot_population_timeseries(adf, mdf)

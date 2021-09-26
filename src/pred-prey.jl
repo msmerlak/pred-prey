@@ -1,5 +1,5 @@
 import Random, Distributions, Statistics
-import Agents#, InteractiveDynamics
+import Agents, InteractiveDynamics
 
 
 mutable struct SheepWolf <: Agents.AbstractAgent
