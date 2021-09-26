@@ -1,5 +1,6 @@
 import Random, Distributions, Statistics
-import Agents, InteractiveDynamics
+import Agents#, InteractiveDynamics
+
 
 mutable struct SheepWolf <: Agents.AbstractAgent
     id::Int
@@ -21,6 +22,7 @@ function initialize_model(;
     grass_growth_rate = 1,
     initial_energy_sheep = 1,
     initial_energy_wolf = 1,
+    base_metabolic_rate = 1,
     initial_metabolism_sheep = 1,
     initial_metabolism_wolf = 1,
     mutation_rate = .05,
@@ -36,7 +38,8 @@ function initialize_model(;
         min_metabolism = 0.002,
         grass_growth_rate = grass_growth_rate,
         predation_efficiency = predation_efficiency,
-        reproduction_threshold = reproduction_threshold
+        reproduction_threshold = reproduction_threshold,
+        base_metabolic_rate = base_metabolic_rate
     )
     model = Agents.ABM(SheepWolf, space; properties, scheduler = Agents.Schedulers.randomly)
     id = 0
@@ -52,20 +55,20 @@ function initialize_model(;
 end
 
 function collect_sheep_here(position, model)
-    return filter!(x -> x.type == :sheep, collect(Agents.agents_in_position(position, model)))
+    return filter!(sheep, collect(Agents.agents_in_position(position, model)))
 end
 
 function sheepwolf_step!(agent::SheepWolf, model)
 
     Agents.walk!(agent, rand, model)
-    agent.energy -= 1 + agent.metabolism
+    agent.energy -= model.base_metabolic_rate + agent.metabolism
 
     sheep_here = collect_sheep_here(agent.pos, model)
 
 
     if agent.type == :sheep
         sheep_eat!(agent, sheep_here, model)
-    else # then `agent.type == :wolf`
+    else
         wolf_eat!(agent, sheep_here, model)
     end
 

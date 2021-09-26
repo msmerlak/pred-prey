@@ -1,3 +1,5 @@
+using Plots
+
 function plot_population_timeseries(adf, mdf)
     figure = InteractiveDynamics.Figure(resolution = (600, 400))
     ax = figure[1, 1] = InteractiveDynamics.Axis(figure; xlabel = "Step", ylabel = "Population")

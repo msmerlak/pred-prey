@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from numpy import arange
 
 sim = run(
-    grid_size=50,
+    grid_size=100,
     FC=False,
     nb_steps=1000,
     counts_dict={
