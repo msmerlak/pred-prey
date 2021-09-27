@@ -6,9 +6,9 @@ from numpy import arange
 
 # single λ
 sim = run(
-    grid_size=25,
+    grid_size=50,
     FC=False,
-    nb_steps=1000,
+    nb_steps=5000,
     levels=2,
     counts_dict={
         'hare': 100,
@@ -25,16 +25,14 @@ sim = run(
         'wolf': 5,
         'human': 1
     },
-    reproduction_threshold=60,
+    reproduction_threshold=40,
     predation_efficiency=10,
-    grass_growth_rate=10,
+    grass_growth_rate=50,
     immigration=False,
     mutation_rate=0.1
 )
 
 sim.plot(levels=2)
-
-sim.autopsy['hare']['killed']/(sim.autopsy['hare']['starved']+sim.autopsy['hare']['killed'])
 
 
 plt.figure(figsize=(20,5))
@@ -56,10 +54,10 @@ np.mean(sim.metabolism['wolf'][500:])
 
 # varying λ
 with mp.Pool(mp.cpu_count()) as pool:
-    metabolisms = pool.map(lambda l: run(
+    sims = pool.map(lambda l: run(
         grid_size=30,
         FC=False,
-        nb_steps=3000,
+        nb_steps=5000,
         levels=2,
         counts_dict={
             'hare': 100,
@@ -81,17 +79,37 @@ with mp.Pool(mp.cpu_count()) as pool:
         grass_growth_rate=l,
         immigration=False,
         mutation_rate=0.05
-    ).metabolism, arange(1, 20, 20/mp.cpu_count()))
+    ), np.logspace(0, np.log10(50), mp.cpu_count()))
 
-x_axis = arange(1, 50, 50./mp.cpu_count())
-y_axis = [np.mean(metabolisms[i]['hare'][50:]) for i in range(8)]
 
+# plot metabolisms
 plt.figure(figsize=(20,5))
-plt.loglog(x_axis, [np.mean(metabolisms[i]['hare'][2000:]) for i in range(8)])
-plt.loglog(x_axis, [np.mean(metabolisms[i]['wolf'][2000:]) for i in range(8)])
-plt.loglog(x_axis, [np.mean(metabolisms[i]['hare'][2000:])/np.mean(metabolisms[i]['wolf'][500:]) for i in range(8)])
-plt.loglog(x_axis,x_axis)
+x_axis = np.logspace(0, np.log10(30), mp.cpu_count())
+plt.plot(x_axis, [np.mean(sims[i].metabolism['hare'][2000:]) for i in range(mp.cpu_count())])
+plt.plot(x_axis, [np.mean(sims[i].metabolism['wolf'][2000:]) for i in range(mp.cpu_count())])
+#plt.plot(x_axis, [np.mean(sims[i].metabolism['hare'][1500:])/np.mean(sims[i].metabolism['wolf'][1500:]) for i in range(mp.cpu_count())])
+plt.plot(x_axis,np.log(x_axis), '--k')
 plt.ylabel('metabolism')
 plt.show()
 
-plt.plot(x_axis,y_axis)
+# plot densities
+plt.figure(figsize=(20,5))
+x_axis = np.logspace(0, np.log10(30), mp.cpu_count())
+plt.plot(x_axis, [np.mean(sims[i].density['hare'][2000:]) for i in range(mp.cpu_count())])
+plt.plot(x_axis, [np.mean(sims[i].density['wolf'][2000:]) for i in range(mp.cpu_count())])
+plt.ylabel('density')
+plt.show()
+
+plt.figure(figsize=(20,5))
+plt.plot([np.mean(sims[i].density['hare'][2000:]) for i in range(mp.cpu_count())], [np.mean(sims[i].density['wolf'][2000:]) for i in range(mp.cpu_count())])
+plt.plot([np.mean(sims[i].density['hare'][2000:]) for i in range(mp.cpu_count())],[np.mean(sims[i].density['hare'][2000:]) for i in range(mp.cpu_count())], '--k')
+plt.ylabel('density')
+plt.show()
+
+# plot fraction of killed over the total
+plt.figure(figsize=(20,5))
+x_axis = np.logspace(0, np.log10(50), mp.cpu_count())
+y_axis = [sims[i].autopsy['hare']['killed']/(sims[i].autopsy['hare']['killed']+sims[i].autopsy['hare']['starved']) for i in range(mp.cpu_count())]
+plt.plot(x_axis, y_axis, 'k')
+plt.ylabel('fraction of killed')
+plt.show()
