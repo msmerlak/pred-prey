@@ -1,0 +1,96 @@
+\documentclass[10pt]{article}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[english,italian]{babel}
+\usepackage{graphicx} 
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{textgreek}
+\usepackage{tabularx}
+\usepackage{amsmath,amssymb,stackengine}
+\usepackage{authblk}
+\usepackage{xcolor}
+
+
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} 
+
+\usepackage[nottoc,notlof,notlot]{tocbibind}
+\usepackage[titles,subfigure]{tocloft} 
+
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} 
+\newcommand*{\hham}{\mathcal{H}}
+\newcommand*{\xx}{\vec{x}}
+\newcommand*{\kk}{\vec{k}}
+\newcommand*{\qq}{\vec{q}}
+\newcommand*{\p}{\varphi}
+\newcommand*{\zpart}{\mathcal{Z}}
+\newcommand*{\w}{\Bigl}
+\newcommand*{\lapint}{\int_{a-i\infty}^{a+i\infty}\frac{dz}{2\pi i}}
+
+\definecolor{carmine}{rgb}{0.59, 0.0, 0.09}
+
+
+\selectlanguage{english}
+
+\title{Analytics Mohammad MF}
+
+\author{Onofrio Mazzarisi}
+
+\begin{document}
+
+\selectlanguage{english}
+
+\maketitle
+
+From the first two equations of Eqs.(5) in Mohammad draft we obtain at stationarity
+\begin{equation}
+c_{\pi}=(\rho_\pi\rho_p)^{1/3},
+\end{equation}
+and
+\begin{equation}
+c_p=\rho_{\pi}^{2/3}\rho_p^{-1/3}.
+\end{equation}
+At stationarity, and assuming $c_{\pi}\geq c_{p}$, the last equations reads
+\begin{equation}
+\frac{\gamma\rho_pc_{\pi}}{c_p}=c_{\pi}+\eta.
+\end{equation}
+Plugging in the expression for $c_{\pi}$ and $c_p$ and solving for $\rho_{\pi}$ we get
+\begin{equation}
+\rho_{\pi}=\frac{1}{2} \sqrt{\frac{\eta ^6+9 \gamma ^2 \eta ^2 \rho_p^4+4 \gamma ^3 \rho_p^6+6 \gamma  \eta ^4 \rho_p^2}{\rho_p^2}}
++\frac{-\eta ^3-3 \gamma  \eta  \rho_p^2}{2 \rho_p},
+\end{equation}
+which at leading order behaves like $\rho_{\pi}\sim\rho_p^2$.
+
+
+\bibliography{Bib/library.bib}
+
+\bibliographystyle{unsrt}
+
+\end{document}

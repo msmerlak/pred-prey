@@ -1,0 +1,177 @@
+\documentclass[10pt]{article}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[english,italian]{babel}
+\usepackage{graphicx} 
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{textgreek}
+\usepackage{tabularx}
+\usepackage{amsmath,amssymb,stackengine}
+\usepackage{authblk}
+\usepackage{xcolor}
+
+
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} 
+
+\usepackage[nottoc,notlof,notlot]{tocbibind}
+\usepackage[titles,subfigure]{tocloft} 
+
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} 
+\newcommand*{\hham}{\mathcal{H}}
+\newcommand*{\xx}{\vec{x}}
+\newcommand*{\kk}{\vec{k}}
+\newcommand*{\qq}{\vec{q}}
+\newcommand*{\p}{\varphi}
+\newcommand*{\zpart}{\mathcal{Z}}
+\newcommand*{\w}{\Bigl}
+\newcommand*{\lapint}{\int_{a-i\infty}^{a+i\infty}\frac{dz}{2\pi i}}
+
+\definecolor{carmine}{rgb}{0.59, 0.0, 0.09}
+
+
+\selectlanguage{english}
+
+\title{{\bf Phase transition in a simple food web}}
+
+\author{Onofrio Mazzarisi}
+
+\affil{{\it Max Planck Institute for Mathematics in the Sciences, Leipzig, Germany}}
+
+\begin{document}
+
+\selectlanguage{english}
+
+\maketitle
+
+\begin{abstract}
+This is a simple mean field (in the sense that lack spatial structure) model for a food web of one prey species
+and one predator species. I designed it having in mind the principal properties of the one in the draft
+but in a simplified version, in particular the evolution part is absent. 
+The model shows a phase transition in the predator (probability) density \(\pi\) at a critical
+value \(\lambda_c\) of the resources generation rate \(\lambda\).
+\end{abstract} 
+
+\section{The model}
+
+To build the model I refer to the properties of the one of th draft, in particular I think the resources
+distribution among preys and predators and their role in the reproductive and death rate is a relevant
+feature to observe the emergence of the transition with respect to the parameter \(\lambda\) which
+controls the growth rate of the resources. Therefore I keep track of the distribution of
+resources present 'inside' the preys \(r_p\) and 'inside' the predators \(r_\pi\) as
+independent variable with respect to the density of preys \(p\) and predators \(\pi\).
+
+The dynamical variables of the problem are
+\begin{itemize}
+\item
+{
+	\(r_f\), the density of free resources
+}
+\item
+{
+	\(r_p\), the density of resources collected by preys
+} 
+\item
+{
+	\(r_{\pi}\), the density of the resources collected by predators
+}
+\item
+{
+	\(p\), the density of preys
+}
+\item
+{
+	\(\pi\), the density predators
+}
+\end{itemize}
+We have a free parameter \(\lambda\), which is the constant {\it growth} rate at which new free resources are generated,
+and fixed parameters which are the {\it voracities} \(v_p\) and \(v_{\pi}\), which regulates how good
+prey and predators are able to capture respectively free resources and preys and the
+{\it metabolisms} \(m_p\) and \(m_{\pi}\) which controls both the reproduction and death rates of
+prey and predators.
+The master equation reads
+\begin{align}
+\dot{r}_f&=\lambda -v_pr_fp \label{eq:r_f}\\
+\dot{r}_p&= r_fv_pp-m_pr_p-v_{\pi}r_p\pi \label{eq:r_p}\\
+\dot{r}_{\pi}&= v_{\pi}r_p\pi-m_{\pi}r_{\pi} \label{eq:r_pi}\\
+\dot{p}&= r_pm_p-m_pp-v_{\pi}\pi p \label{eq:p}\\
+\dot{\pi}&= r_{\pi}m_{\pi}-m_{\pi}\pi \label{eq:pi}.
+\end{align}
+The free resources \(r_f\) increase with constan rate \(\lambda\) and get consumed
+with rate \(v_pr_fp\) which accounts for how good are the preys to collect the free resources and how
+abundant are both, we obtain Eq.~(\ref{eq:r_f}). The resources of the preys \(r_p\)
+increase consistently with the decrease of the free resources and they are depleated
+by the metabolism of the preys \(m_p(r_p/p)p=m_pr_p\) and by the amount that the predators
+take from the preys \(v_{\pi}\pi(r_p/p)p=v_{\pi}\pi r_p\) and one gets Eq.~(\ref{eq:r_p}).
+Similiar reasonings bring to Eq.~(\ref{eq:r_pi}). The density of preys is increased or decreased
+by their metabolism dependently on the abundance of resources they collected, they reproduce if there is more
+then one resource per individual and they die if there is less, the term 
+\((r_p/p-1)m_pp=m_pr_p-m_pp\) accounts for this. Moreover the density of preys is reduced by predation
+which is accounted for with the term \(v_{\pi}\pi\), Eq.~(\ref{eq:p}) follows. Equation~(\ref{eq:pi})
+is derived with the same arguments.
+
+
+\section{Stationary solution}
+
+If we look for a stationary solution we obtain from Eq.~(\ref{eq:r_f}) \(r_f^s=\lambda/v_pp\),
+from Eq.~(\ref{eq:pi}) \(r_{\pi}^s=\pi\) and
+then from Eq.~(\ref{eq:r_pi}) \(r_p^s=m_{\pi}/v_{\pi}\).
+We are left with
+\begin{align}
+0&=\frac{m_{\pi}m_p}{v_{\pi}}-m_pp-v_{\pi}\pi p \\
+0&=\lambda-\frac{m_pm_{\pi}}{v_{\pi}}-m_{\pi}\pi.
+\end{align}
+From the first one we obtain
+\begin{equation}
+\pi=\frac{m_{\pi}m_p}{v^2_{\pi}p}-\frac{m_p}{v_{\pi}},
+\end{equation}
+and from the second one
+\begin{equation}
+p^s=\frac{m^2_{\pi}m_p}{\lambda v^2_{\pi}}.
+\label{eq:solution-preys}
+\end{equation}
+Therefore, for given value of the fixed parameters, we have a stable finite solution for the density
+of the preys for every \(\lambda\). For the predators this is not true and we can see that,
+sobstituting now Eq.~(\ref{eq:solution-preys}) in the solution for \(\pi\) we obtain
+\begin{equation}
+\pi^s=\frac{1}{m_{\pi}}\Bigl(\lambda-\frac{m_pm_{\pi}}{v_{\pi}}\Bigl).
+\end{equation}
+
+A meaningful finite stationary solution for the predator density exist only if 
+\(\lambda>\lambda_c\), with the critical value given by
+\begin{equation}
+\lambda_c=\frac{m_pm_{\pi}}{v_{\pi}}.
+\end{equation}
+
+\bibliography{Bib/library.bib}
+
+\bibliographystyle{unsrt}
+
+\end{document}
