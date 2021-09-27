@@ -1,3 +1,6 @@
+using DrWatson
+@quickactivate("nothing")
+
 import Random, Distributions, Statistics
 import Agents, InteractiveDynamics
 

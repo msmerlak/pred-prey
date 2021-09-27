@@ -1,3 +1,6 @@
+using DrWatson
+@quickactivate("nothing")
+
 using Plots, CairoMakie
 
 function plot_population_timeseries(adf, mdf)
