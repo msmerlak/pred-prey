@@ -1,5 +1,5 @@
 using DrWatson
-@quickactivate("nothing")
+@quickactivate
 
 import Random, Distributions, Statistics
 import Agents, InteractiveDynamics
