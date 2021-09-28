@@ -25,3 +25,9 @@ function plot_metabolism_timeseries(adf, mdf)
         InteractiveDynamics.Legend(figure, [sheepl, wolfl], ["Sheep", "Wolves"])
     figure
 end
+
+function plot_time_of_death_histogram(time_of_death)
+    figure = bar(collect(keys(time_of_death)), collect(values(time_of_death)),xlabel="time of death",
+     ylabel="count", legend=false)
+    figure
+end
