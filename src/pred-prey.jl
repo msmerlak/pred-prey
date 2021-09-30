@@ -117,3 +117,13 @@ function grass_step!(model)
         model.grass[p...] += model.grass_growth_rate
     end
 end
+
+function rununtil(model, s)
+    wolves_counter = 0
+    for val in values(model.agents)
+        if wolves(val)
+            wolves_counter +=1
+        end
+    end
+    return wolves_counter == 0 ||s == n
+end
