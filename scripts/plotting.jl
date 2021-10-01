@@ -2,6 +2,7 @@ using DrWatson
 @quickactivate("nothing")
 
 using Plots, CairoMakie
+plotly()
 
 function plot_population_timeseries(adf, mdf)
     figure = InteractiveDynamics.Figure(resolution = (600, 400))
@@ -28,6 +29,12 @@ end
 
 function plot_time_of_death_histogram(time_of_death)
     figure = bar(collect(keys(time_of_death)), collect(values(time_of_death)),xlabel="time of death",
-     ylabel="count", legend=false)
+    ylabel = "count", legend=false)
+    figure
+end
+
+function plot_survival_probability(survival_probability)
+    figure = Plots.plot(survival_probability ,xlabel = "time",
+    ylabel = "survival probability", legend=false)
     figure
 end
