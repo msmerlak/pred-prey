@@ -2,35 +2,39 @@ from with_space import *
 import multiprocess as mp
 import matplotlib.pyplot as plt
 %matplotlib inline
-from numpy import arange
+from numpy import arange, exp, log, linspace
 
-sim = run(
-    grid_size=100,
-    FC=False,
-    nb_steps=1000,
-    counts_dict={
-        'hare': 100,
-        'wolf': 100,
-        'human': 0
-    },
-    energy_dict={
-        'hare': 50,
-        'wolf': 50,
-        'human': 50
-    },
-    metabolism_dict={
-        'hare': 5,
-        'wolf': 1,
-        'human': 1
-    },
-    reproduction_threshold = 30,
-    predation_efficiency = 10,
-    grass_growth_rate=20,
-    immigration=False,
-    mutation_rate=.1
-)
+x=np.exp(np.linspace(np.log(1),np.log(4),4))
+sims = []
+for l in x:    
+    sim = run(
+        grid_size=10,
+        FC=False,
+        nb_steps=1000,
+        counts_dict={
+            'hare': 100,
+            'wolf': 100,
+            'human': 0
+            },
+            energy_dict={
+            'hare': 50,
+            'wolf': 50,
+            'human': 50
+            },
+            metabolism_dict={
+            'hare': 5,
+            'wolf': 1,
+            'human': 1
+            },
+            reproduction_threshold = 200,
+            predation_efficiency = 100,
+            grass_growth_rate=l,
+            immigration=True,
+            mutation_rate=1
+            )
+    sims.append(sim)
 
-sim.plot()
+sims[0].plot()
 
 if __name__ == '__main__':
 
