@@ -3,6 +3,7 @@ using DrWatson
 
 import Random, Distributions, Statistics
 import Agents, InteractiveDynamics
+import ProgressBars
 
 
 mutable struct SheepWolf <: Agents.AbstractAgent
@@ -30,19 +31,24 @@ function initialize_model(;
     initial_metabolism_wolf = 1,
     mutation_rate = .05,
     predation_efficiency = 10,
-    reproduction_threshold = 50,
+    reproduction_threshold = 40,
+    wolves_immigration = false,
     seed = nothing,
 )
 
     space = Agents.GridSpace(dims, periodic = true)
     properties = (
         grass = fill(initial_grass, dims),
+        time_from_last_immigration = [0],
         mutation_rate = mutation_rate,
         min_metabolism = 0.002,
         grass_growth_rate = grass_growth_rate,
         predation_efficiency = predation_efficiency,
         reproduction_threshold = reproduction_threshold,
-        base_metabolic_rate = base_metabolic_rate
+        base_metabolic_rate = base_metabolic_rate,
+        wolves_immigration = wolves_immigration,
+        initial_metabolism_wolf = initial_metabolism_wolf,
+        initial_energy_wolf = initial_energy_wolf
     )
     model = Agents.ABM(SheepWolf, space; properties, scheduler = Agents.Schedulers.randomly)
     id = 0
@@ -112,8 +118,15 @@ function reproduce!(agent, model)
     return
 end
 
-function grass_step!(model)
+function model_step!(model)
     @inbounds for p in Agents.positions(model) # we don't have to enable bound checking
         model.grass[p...] += model.grass_growth_rate
+    end
+    # wolves immigration
+    if model.wolves_immigration && length(filter(wolves, [agents for agents in Agents.allagents(model)])) == 0
+        Agents.add_agent!(SheepWolf(Agents.nextid(model), (0, 0), :wolf, model.initial_energy_wolf, model.initial_metabolism_wolf), model)
+        model.time_from_last_immigration[1] = 1
+    else
+        model.time_from_last_immigration[1] += 1
     end
 end
