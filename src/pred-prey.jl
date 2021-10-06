@@ -5,7 +5,6 @@ import Random, Distributions, Statistics
 import Agents, InteractiveDynamics
 import ProgressBars
 
-
 mutable struct SheepWolf <: Agents.AbstractAgent
     id::Int
     pos::Dims{2}
@@ -40,7 +39,7 @@ function initialize_model(;
     properties = (
         grass = fill(initial_grass, dims),
         time_from_last_immigration = [0],
-        extinction_statistics = Dict{Int64, Int64}(),
+        extinction_statistics = Dict([(1, 0)]),
         mutation_rate = mutation_rate,
         min_metabolism = 0.002,
         grass_growth_rate = grass_growth_rate,
