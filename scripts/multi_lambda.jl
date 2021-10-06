@@ -19,7 +19,8 @@ s_counts , w_counts = [], []
             base_metabolic_rate = 0.,
             mutation_rate = 0.0,
             predation_efficiency = 10,
-            reproduction_threshold = 40
+            reproduction_threshold = 40,
+            wolves_immigration = false
             );
 
             n = 2000

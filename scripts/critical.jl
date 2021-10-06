@@ -32,7 +32,8 @@ function critical_analysis(; grass_growth_rate, n, realizations)
             base_metabolic_rate = 0.,
             mutation_rate = 0.0,
             predation_efficiency = 10,
-            reproduction_threshold = 40
+            reproduction_threshold = 40,
+            wolves_immigration = true
         );
 
         adata = [(sheep, count), (wolves, count)];

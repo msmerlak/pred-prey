@@ -21,7 +21,8 @@ n = 3000
             base_metabolic_rate = 0.,
             mutation_rate = 0.0,
             predation_efficiency = 10,
-            reproduction_threshold = 40
+            reproduction_threshold = 40,
+            wolves_immigration = true
             );
 
             adata = [(sheep, count), (wolves, count)]#, (:metabolism, Statistics.mean, sheep), (:metabolism, Statistics.mean, wolves)];
