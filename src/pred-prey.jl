@@ -40,6 +40,7 @@ function initialize_model(;
     properties = (
         grass = fill(initial_grass, dims),
         time_from_last_immigration = [0],
+        extinction_statistics = Dict{Int64, Int64}(),
         mutation_rate = mutation_rate,
         min_metabolism = 0.002,
         grass_growth_rate = grass_growth_rate,
@@ -125,6 +126,12 @@ function model_step!(model)
     # wolves immigration
     if model.wolves_immigration && length(filter(wolves, [agents for agents in Agents.allagents(model)])) == 0
         Agents.add_agent!(SheepWolf(Agents.nextid(model), (0, 0), :wolf, model.initial_energy_wolf, model.initial_metabolism_wolf), model)
+        # extinctions counting
+        if haskey(model.extinction_statistics, model.time_from_last_immigration[1])
+            model.extinction_statistics[model.time_from_last_immigration[1]] += 1
+        else
+            model.extinction_statistics[model.time_from_last_immigration[1]] = 1
+        end
         model.time_from_last_immigration[1] = 1
     else
         model.time_from_last_immigration[1] += 1
