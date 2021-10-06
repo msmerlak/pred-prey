@@ -3,20 +3,29 @@ using StatsBase
 using Random, Distributions
 using ProgressBars
 
+grid = create_grid(
+    linear_grid_size = 1000,
+    active_site_probability = 0.68
+    )
 
+percolate!(grid)
 
-dist, exp = critical_analysis(
-        active_site_probability=0.705485,
-        linear_grid_size=3000,
+grid
+
+dist, exp = critical_analysis_percolation(
+        active_site_probability=0.705,
+        linear_grid_size=1000,
         realizations=100
         )
+
 a = [i^(-.159464) for i in 1:1000]
 
-Plots.plot([dist, a], xaxis=:log, yaxis=:log)
+piu = dist
+meno = dist
 
-Plots.plot([1/(3000+1-i) for i in 1:3000],exp)
+Plots.plot([meno, dist, piu, a], xaxis=:log, yaxis=:log)
 
-function critical_analysis(; active_site_probability, linear_grid_size, realizations)
+function critical_analysis_percolation(; active_site_probability, linear_grid_size, realizations)
     time_of_death = fill(0,linear_grid_size)
     for r in tqdm(1:realizations)
         grid = create_grid(
@@ -27,7 +36,6 @@ function critical_analysis(; active_site_probability, linear_grid_size, realizat
         time_of_death[sum(percolate!(grid))]+=1
     end
 
-    time_of_death[n] = 0
     survival_probability = [sum(time_of_death[i:linear_grid_size]) for i in 1:linear_grid_size]/sum(time_of_death)
     shifted = [survival_probability[floor(Int,1+i/8)] for i in 1:linear_grid_size]
     delta_exponent = reverse(log.(survival_probability./shifted)/log(8))
