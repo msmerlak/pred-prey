@@ -49,6 +49,9 @@ function initialize_model(;
         wolves_immigration = wolves_immigration,
         initial_metabolism_wolf = initial_metabolism_wolf,
         initial_energy_wolf = initial_energy_wolf
+        sheeps_immigration = sheeps_immigration,
+        initial_metabolism_sheep = initial_metabolism_sheep,
+        initial_energy_sheep = initial_energy_sheep
     )
     model = Agents.ABM(SheepWolf, space; properties, scheduler = Agents.Schedulers.randomly)
     id = 0
@@ -134,5 +137,9 @@ function model_step!(model)
         model.time_from_last_immigration[1] = 1
     else
         model.time_from_last_immigration[1] += 1
+    end
+    # sheeps immigration
+    if model.sheeps_immigration && length(filter(sheep, [agents for agents in Agents.allagents(model)])) == 0
+        Agents.add_agent!(SheepWolf(Agents.nextid(model), (0, 0), :sheep, model.initial_energy_sheep, model.initial_metabolism_sheep), model)
     end
 end
