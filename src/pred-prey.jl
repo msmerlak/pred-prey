@@ -32,7 +32,8 @@ function initialize_model(;
     predation_efficiency = 10,
     reproduction_threshold = 40,
     wolves_immigration = false,
-    seed = nothing,
+    sheeps_immigration = false,
+    seed = nothing
 )
 
     space = Agents.GridSpace(dims, periodic = true)
@@ -48,7 +49,7 @@ function initialize_model(;
         base_metabolic_rate = base_metabolic_rate,
         wolves_immigration = wolves_immigration,
         initial_metabolism_wolf = initial_metabolism_wolf,
-        initial_energy_wolf = initial_energy_wolf
+        initial_energy_wolf = initial_energy_wolf,
         sheeps_immigration = sheeps_immigration,
         initial_metabolism_sheep = initial_metabolism_sheep,
         initial_energy_sheep = initial_energy_sheep
